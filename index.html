@@ -178,10 +178,10 @@ align-items:center;
 justify-content:center;
 text-align:center;
 padding:40px 20px;
-/* GitHub'daki büyük harfli .JPG uzantısına göre güncellendi */
+/* Hem küçük harf hem de sunucu uyumluluğu için optimize edilen görsel yolu */
 background:
 linear-gradient(rgba(250,247,242,.85),rgba(250,247,242,.85)),
-url("arka-plan.JPG");
+url("./arka-plan.jpg");
 background-size:cover;
 background-position:center top;
 background-repeat:no-repeat;
@@ -362,7 +362,6 @@ h1{ font-size:42px; }
 
 <div class="page-wrapper">
 
-  <!-- ZARF AÇILIŞ SAHNESİ -->
   <div class="envelope-stage">
     <div class="envelope" id="myEnvelope" onclick="openEnvelope()">
       <div class="flap"></div>
@@ -377,7 +376,6 @@ h1{ font-size:42px; }
     </div>
   </div>
 
-  <!-- DETAYLI DAVETİYE İÇERİĞİ -->
   <div class="main-content">
     <section class="hero">
       <div class="hero-content">
@@ -414,7 +412,7 @@ h1{ font-size:42px; }
     <section class="section">
       <h2>Program Akışı</h2>
       <div class="timeline">
-        <div>Status 🕖 19:00 — Karşılama</div>
+        <div>🕖 19:00 — Karşılama</div>
         <div>💍 Düğün Töreni</div>
         <div>📸 Fotoğraf Çekimi</div>
         <div>🎶 Eğlence ve Kutlama</div>
@@ -453,13 +451,11 @@ function openEnvelope() {
   if(!envelope.classList.contains('open')) {
     envelope.classList.add('open');
     
-    // Güvenli Müzik Oynatma (Müzik dosyası olmasa bile kodun donmasını engeller)
     const music = document.getElementById("music");
     if(music) {
-      music.play().catch(e => console.log("Müzik dosyası henüz yüklenmemiş veya engellendi. Sorun değil, geçiş devam ediyor."));
+      music.play().catch(e => console.log("Müzik çalma durumu kontrolü."));
     }
     
-    // Ekranı pürüzsüzce aşağı kaydırıp kilidi açan yer
     setTimeout(() => {
       document.body.classList.add('expanded');
       document.body.classList.remove('locked');
