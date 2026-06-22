@@ -29,7 +29,6 @@ line-height: 1.7;
 overflow-x: hidden;
 }
 
-/* İlk başta kullanıcının aşağı kaydırmasını engelliyoruz */
 body.locked {
 overflow: hidden;
 height: 100vh;
@@ -42,7 +41,6 @@ width: 100%;
 transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
 }
 
-/* Zarf Açıldıktan Sonra Tüm Sahneyi Yukarı Kaydıran Tetikleyici */
 body.expanded .page-wrapper {
 transform: translateY(-100vh);
 }
@@ -60,7 +58,6 @@ position: relative;
 z-index: 10;
 }
 
-/* Zarf Gövdesi */
 .envelope {
 position: relative;
 width: 450px;
@@ -76,7 +73,6 @@ transition: transform 0.4s ease;
 transform: scale(1.02);
 }
 
-/* Zarf Kapakları */
 .envelope .flap, .envelope .pocket {
 position: absolute;
 width: 0;
@@ -84,7 +80,6 @@ height: 0;
 border-style: solid;
 }
 
-/* Üst Kapak */
 .envelope .flap {
 border-width: 150px 225px 0 225px;
 border-color: #c9c5bc transparent transparent transparent;
@@ -95,7 +90,6 @@ z-index: 3;
 transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0s, z-index 0.1s ease 0.4s;
 }
 
-/* Alt Gövde / Cep */
 .envelope .pocket {
 border-width: 150px 225px 150px 225px;
 border-color: transparent #d3cfc5 #b7b3aa #d3cfc5;
@@ -104,7 +98,6 @@ left: 0;
 z-index: 2;
 }
 
-/* Balmumu Mühür */
 .envelope .seal {
 position: absolute;
 top: 50%;
@@ -126,7 +119,6 @@ box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Mektup Kartı (Zarfın İçindeki Küçük Önizleme) */
 .letter-card {
 position: absolute;
 top: 5%;
@@ -157,7 +149,6 @@ font-size: 14px;
 color: #777;
 }
 
-/* --- ANIMASYON TETİKLEYİCİLERİ --- */
 .envelope.open .seal {
 opacity: 0;
 transform: translate(-50%, -50%) scale(0);
@@ -173,7 +164,6 @@ transform: translateY(-200px);
 z-index: 5;
 }
 
-
 /* --- ASIL SİTE / DAVETİYE İÇERİĞİ --- */
 .main-content {
 width: 100%;
@@ -188,10 +178,10 @@ align-items:center;
 justify-content:center;
 text-align:center;
 padding:40px 20px;
-/* Arka plan görseli kendi fotoğrafınızla değiştirildi */
+/* GitHub'daki büyük harfli .JPG uzantısına göre güncellendi */
 background:
 linear-gradient(rgba(250,247,242,.85),rgba(250,247,242,.85)),
-url("WhatsApp Image 2026-06-22 at 09.55.10.jpg");
+url("arka-plan.JPG");
 background-size:cover;
 background-position:center top;
 background-repeat:no-repeat;
@@ -214,7 +204,7 @@ justify-content:center;
 font-family:'Playfair Display',serif;
 font-size:42px;
 color:var(--gold);
-background: rgba(255,255,255,0.5); /* Fotoğraf üzerinde daha net durması için hafif opaklık */
+background: rgba(255,255,255,0.5);
 }
 
 h1{
@@ -394,7 +384,6 @@ h1{ font-size:42px; }
         <div class="monogram">KM</div>
         <h1>Kübra & Mert</h1>
         
-        <!-- İstediğiniz yeni metin buraya yerleştirildi -->
         <p class="subtitle">
           "Bir ‘evet’ ile başlayan hikâyemizin en özel gününde, mutluluğumuzu paylaşmak üzere sizleri düğünümüze bekliyoruz."
         </p>
@@ -464,9 +453,13 @@ function openEnvelope() {
   if(!envelope.classList.contains('open')) {
     envelope.classList.add('open');
     
+    // Güvenli Müzik Oynatma (Müzik dosyası olmasa bile kodun donmasını engeller)
     const music = document.getElementById("music");
-    music.play().catch(e => console.log("Müzik engellendi:", e));
+    if(music) {
+      music.play().catch(e => console.log("Müzik dosyası henüz yüklenmemiş veya engellendi. Sorun değil, geçiş devam ediyor."));
+    }
     
+    // Ekranı pürüzsüzce aşağı kaydırıp kilidi açan yer
     setTimeout(() => {
       document.body.classList.add('expanded');
       document.body.classList.remove('locked');
@@ -474,7 +467,6 @@ function openEnvelope() {
   }
 }
 
-// Geri Sayım Sayacı
 const weddingDate = new Date("2026-08-09T19:00:00").getTime();
 setInterval(() => {
   const now = new Date().getTime();
@@ -486,13 +478,12 @@ setInterval(() => {
   document.getElementById("seconds").innerHTML = Math.floor((distance % (1000*60)) / 1000);
 }, 1000);
 
-// Müzik Kontrolü
 function toggleMusic(){
   const music = document.getElementById("music");
-  if(music.paused){
-    music.play();
-  } else {
+  if(music && !music.paused){
     music.pause();
+  } else if(music) {
+    music.play().catch(e => console.log(e));
   }
 }
 </script>
