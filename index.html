@@ -29,24 +29,35 @@ line-height: 1.7;
 overflow-x: hidden;
 }
 
-/* Sayfa İlk Açıldığında Aşağı Kaydırmayı Kapatıyoruz (Zarf Açılmadan Kaymasın) */
+/* İlk başta kullanıcının aşağı kaydırmasını engelliyoruz */
 body.locked {
-overflow-y: hidden;
+overflow: hidden;
 height: 100vh;
 }
 
-/* --- ZARF VE KAPSAYICI ALANI --- */
-.envelope-stage {
+/* --- KUSURSUZ GEÇİŞ İÇİN YENİ SAHNE YAPISI --- */
+.page-wrapper {
 position: relative;
+width: 100%;
+transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+/* Zarf Açıldıktan Sonra Tüm Sahneyi Yukarı Kaydıran Tetikleyici */
+body.expanded .page-wrapper {
+transform: translateY(-100vh);
+}
+
+/* ZARF EKRANI */
+.envelope-stage {
 width: 100%;
 height: 100vh;
 display: flex;
 justify-content: center;
 align-items: center;
 background-color: var(--cream);
-perspective: 1000px;
-z-index: 100;
-transition: margin-bottom 1s ease 1s;
+perspective: 1200px;
+position: relative;
+z-index: 10;
 }
 
 /* Zarf Gövdesi */
@@ -56,7 +67,7 @@ width: 450px;
 height: 300px;
 background-color: #dfdcd4;
 cursor: pointer;
-box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+box-shadow: 0 15px 40px rgba(0,0,0,0.12);
 transform-style: preserve-3d;
 transition: transform 0.4s ease;
 }
@@ -65,7 +76,7 @@ transition: transform 0.4s ease;
 transform: scale(1.02);
 }
 
-/* Zarf Kapakları (Üçgenler) */
+/* Zarf Kapakları */
 .envelope .flap, .envelope .pocket {
 position: absolute;
 width: 0;
@@ -81,7 +92,7 @@ top: 0;
 left: 0;
 transform-origin: top;
 z-index: 3;
-transition: transform 0.5s ease 0s, z-index 0.1s ease 0.5s;
+transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0s, z-index 0.1s ease 0.4s;
 }
 
 /* Alt Gövde / Cep */
@@ -111,11 +122,11 @@ font-family: 'Playfair Display', serif;
 font-weight: bold;
 font-size: 20px;
 z-index: 4;
-box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* --- İÇERİDEKİ DAVETİYE KARTI --- */
+/* Mektup Kartı (Zarfın İçindeki Küçük Önizleme) */
 .letter-card {
 position: absolute;
 top: 5%;
@@ -123,70 +134,53 @@ left: 5%;
 width: 90%;
 height: 90%;
 background: var(--white);
-border-radius: 10px;
+border-radius: 8px;
 box-shadow: 0 0 15px rgba(0,0,0,0.05);
 z-index: 1;
-overflow-y: auto; /* Kart içi kaydırma aktif */
-padding: 40px 20px;
-transition: transform 1s ease 0.5s, width 0.8s ease 1.2s, height 0.8s ease 1.2s, left 0.8s ease 1.2s, top 0.8s ease 1.2s, box-shadow 0.8s ease 1.2s;
+transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 20px;
+text-align: center;
 }
 
-/* --- AÇILMA ANİMASYONLARI (Tıklanınca Tetiklenir) --- */
+.letter-card h2 {
+font-family: 'Playfair Display', serif;
+color: var(--gold);
+font-size: 28px;
+margin-bottom: 5px;
+}
+.letter-card p {
+font-size: 14px;
+color: #777;
+}
 
-/* 1. Aşama: Mühür Kaybolur */
+/* --- ANIMASYON TETİKLEYİCİLERİ --- */
 .envelope.open .seal {
 opacity: 0;
 transform: translate(-50%, -50%) scale(0);
 }
 
-/* 2. Aşama: Kapak Yukarı Döner */
 .envelope.open .flap {
 transform: rotateX(180deg);
 z-index: 0;
 }
 
-/* 3. Aşama: Davetiye Kartı Zarfın İçinden Yukarı Çıkar */
 .envelope.open .letter-card {
-transform: translateY(-320px);
-z-index: 10;
+transform: translateY(-200px);
+z-index: 5;
 }
 
-/* 4. Aşama: Kart Tam Ekrana Yayılır ve Normal Bir Web Sayfasına Dönüşür */
-body.expanded .envelope-stage {
-height: auto;
-min-height: auto;
-padding: 0;
-}
 
-body.expanded .envelope {
-box-shadow: none;
-background: transparent;
-cursor: default;
+/* --- ASIL SİTE / DAVETİYE İÇERİĞİ (ZARF KAYINCA ALTTAN ÇIKACAK) --- */
+.main-content {
 width: 100%;
-height: auto;
-transform: none !important;
+min-height: 100vh;
+background: var(--cream);
 }
 
-body.expanded .flap, 
-body.expanded .pocket {
-display: none; /* Zarfın dış parçalarını gizleriz ki altta boşluk kalmasın */
-}
-
-body.expanded .letter-card {
-position: relative;
-top: 0 !important;
-left: 0 !important;
-width: 100% !important;
-height: auto !important;
-transform: none !important;
-box-shadow: none;
-background: transparent;
-padding: 0;
-overflow: visible;
-}
-
-
-/* --- SENİN MEVCUT TASARIMIN (KARTIN İÇİ) --- */
 .hero{
 min-height:100vh;
 display:flex;
@@ -359,81 +353,92 @@ h1{ font-size:42px; }
 .envelope { width: 330px; height: 220px; }
 .envelope .flap { border-width: 110px 165px 0 165px; }
 .envelope .pocket { border-width: 110px 165px 110px 165px; }
-.envelope.open .letter-card { transform: translateY(-240px); }
+.envelope.open .letter-card { transform: translateY(-140px); }
 }
 </style>
 </head>
 <body class="locked">
 
-<!-- DIŞ SAHNE VE ZARF -->
-<div class="envelope-stage" id="stage">
-  <div class="envelope" id="myEnvelope" onclick="openEnvelope()">
-    <div class="flap"></div>
-    <div class="pocket"></div>
-    <div class="seal">KM</div>
-    
-    <!-- DAVETİYE KARTI (ZARFIN İÇİNDEN ÇIKACAK) -->
-    <div class="letter-card">
-      <section class="hero">
-        <div class="hero-content">
-          <div class="monogram">KM</div>
-          <h1>Kübra & Mert</h1>
-          <p class="subtitle">Birlikte yazdığımız hikâyenin en güzel sayfasına davetlisiniz.</p>
-          <p>
-            Bazı yollar tesadüfen kesişir, bazı kalpler ise birbirini bulmak için yaratılmıştır.
-            Hayatlarımızı birleştireceğimiz bu özel günde mutluluğumuza ortak olmanızdan onur duyarız.
-          </p>
-          <br>
-          <div class="date">09 Ağustos 2026 • Saat 19:00</div>
-        </div>
-      </section>
+<div class="page-wrapper">
 
-      <section class="section">
-        <h2>Düğünümüze Kalan Süre</h2>
-        <div class="countdown">
-          <div class="card"><span id="days">0</span>Gün</div>
-          <div class="card"><span id="hours">0</span>Saat</div>
-          <div class="card"><span id="minutes">0</span>Dakika</div>
-          <div class="card"><span id="seconds">0</span>Saniye</div>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>Mekan Bilgisi</h2>
-        <div class="location-box">
-          <h3>Taşçı Konağı</h3>
-          <p>Eski Kemah Yolu Üzeri<br>Orman Fidanlığı Yanı<br>Merkez / Erzincan</p>
-          <a class="btn" href="https://maps.google.com" target="_blank">Konuma Git</a>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>Program Akışı</h2>
-        <div class="timeline">
-          <div>🕖 19:00 — Karşılama</div>
-          <div>💍 Düğün Töreni</div>
-          <div>📸 Fotoğraf Çekimi</div>
-          <div>🎶 Eğlence ve Kutlama</div>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>LCV</h2>
-        <p>Katılım durumunuzu bizimle paylaşabilir misiniz?</p>
-        <br>
-        <p>📱 0505 390 04 64</p>
-        <a class="btn" href="https://wa.me/905053900464?text=Merhaba%20Kübra%20ve%20Mert,%20düğün%20davetiniz%20için%20teşekkür%20ederiz.%20Katılım%20durumumuzu%20bildirmek%20istiyoruz." target="_blank">Katılım Bildir</a>
-      </section>
-
-      <footer>
-        <div class="flower">🌿 🤍 🌾</div>
-        <h3>Kübra & Mert</h3>
-        <p>Bu anlamlı günümüzde yanımızda olmanız bizim için en değerli hediyedir.</p>
-        <br>
-        <p>09.08.2026</p>
-      </footer>
+  <!-- GERÇEKÇİ ZARF AÇILIŞ SAHNESİ (1. EKRAN) -->
+  <div class="envelope-stage">
+    <div class="envelope" id="myEnvelope" onclick="openEnvelope()">
+      <div class="flap"></div>
+      <div class="pocket"></div>
+      <div class="seal">KM</div>
+      
+      <!-- Zarfın içinden taşan sembolik kart -->
+      <div class="letter-card">
+        <h2>Kübra & Mert</h2>
+        <p>Düğün Davetiyesi</p>
+        <span style="font-size: 20px; margin-top:10px;">✨</span>
+      </div>
     </div>
   </div>
+
+  <!-- ASIL DETAYLI WEB SİTESİ (2. EKRAN - AŞAĞIDAN KAYARAK GELECEK) -->
+  <div class="main-content">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="monogram">KM</div>
+        <h1>Kübra & Mert</h1>
+        <p class="subtitle">Birlikte yazdığımız hikâyenin en güzel sayfasına davetlisiniz.</p>
+        <p>
+          Bazı yollar tesadüfen kesişir, bazı kalpler ise birbirini bulmak için yaratılmıştır.
+          Hayatlarımızı birleştireceğimiz bu özel günde mutluluğumuza ortak olmanızdan onur duyarız.
+        </p>
+        <br>
+        <div class="date">09 Ağustos 2026 • Saat 19:00</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Düğünümüze Kalan Süre</h2>
+      <div class="countdown">
+        <div class="card"><span id="days">0</span>Gün</div>
+        <div class="card"><span id="hours">0</span>Saat</div>
+        <div class="card"><span id="minutes">0</span>Dakika</div>
+        <div class="card"><span id="seconds">0</span>Saniye</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Mekan Bilgisi</h2>
+      <div class="location-box">
+        <h3>Taşçı Konağı</h3>
+        <p>Eski Kemah Yolu Üzeri<br>Orman Fidanlığı Yanı<br>Merkez / Erzincan</p>
+        <a class="btn" href="https://maps.google.com" target="_blank">Konuma Git</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Program Akışı</h2>
+      <div class="timeline">
+        <div>Automated 🕖 19:00 — Karşılama</div>
+        <div>💍 Düğün Töreni</div>
+        <div>📸 Fotoğraf Çekimi</div>
+        <div>🎶 Eğlence ve Kutlama</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>LCV</h2>
+      <p>Katılım durumunuzu bizimle paylaşabilir misiniz?</p>
+      <br>
+      <p>📱 0505 390 04 64</p>
+      <a class="btn" href="https://wa.me/905053900464?text=Merhaba%20Kübra%20ve%20Mert,%20düğün%20davetiniz%20için%20teşekkür%20ederiz.%20Katılım%20durumumuzu%20bildirmek%20istiyoruz." target="_blank">Katılım Bildir</a>
+    </section>
+
+    <footer>
+      <div class="flower">🌿 🤍 🌾</div>
+      <h3>Kübra & Mert</h3>
+      <p>Bu anlamlı günümüzde yanımızda olmanız bizim için en değerli hediyedir.</p>
+      <br>
+      <p>09.08.2026</p>
+    </footer>
+  </div>
+
 </div>
 
 <button class="music-btn" onclick="toggleMusic()">🎻</button>
@@ -447,18 +452,18 @@ function openEnvelope() {
   const envelope = document.getElementById('myEnvelope');
   
   if(!envelope.classList.contains('open')) {
-    // 1. Zarf açılma stilini ekle (Kapak açılır, mektup yukarı çıkar)
+    // 1. Aşama: Zarf kapağını aç ve küçük kartı yukarı fırlat
     envelope.classList.add('open');
     
-    // Müzik çalmaya başlasın
+    // Müziği başlat
     const music = document.getElementById("music");
     music.play().catch(e => console.log("Müzik engellendi:", e));
     
-    // 2. Animasyon bittikten sonra kartı ekrana yay ve kaydırmayı aç (Tam Geçiş)
+    // 2. Aşama: Hiçbir sarsıntı olmadan tüm ekranı sinematik bir şekilde yukarı kaydır
     setTimeout(() => {
-      document.body.classList.remove('locked');
       document.body.classList.add('expanded');
-    }, 1600); // 1.6 saniye sonra akıcı geçiş yapar
+      document.body.classList.remove('locked');
+    }, 1400); // Küçük kart yukarı çıktıktan hemen sonra akıcı geçiş başlar
   }
 }
 
@@ -474,7 +479,7 @@ setInterval(() => {
   document.getElementById("seconds").innerHTML = Math.floor((distance % (1000*60)) / 1000);
 }, 1000);
 
-// Müzik Butonu Kontrolü
+// Müzik Kontrolü
 function toggleMusic(){
   const music = document.getElementById("music");
   if(music.paused){
