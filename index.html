@@ -1,427 +1,293 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kübra & Mert | Düğün Davetiyesi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kübra & Mert Davetiye</title>
+    <style>
+        /* SİZİN ORİJİNAL TASARIMINIZ VE ESKİ DÜZEN */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #faf6f0;
+            font-family: 'Georgia', serif;
+            color: #4a4a4a;
+            overflow-x: hidden;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+        /* Giriş Ekranı (Zarf ve Mühür Bölümü) */
+        .envelope-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #f3ede2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: transform 1.5s ease-in-out;
+            background-image: url('https://www.transparenttextures.com/patterns/soft-paper.png');
+        }
 
-<style>
-:root{
---gold:#b08d57;
---cream:#faf7f2;
---dark:#4d453f;
---white:#ffffff;
-}
+        .envelope {
+            position: relative;
+            width: 90%;
+            max-width: 450px;
+            height: 300px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #dfd5c6;
+            cursor: pointer;
+            padding: 20px;
+            text-align: center;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px dashed #bfa15f;
+            border-radius: 8px;
+            pointer-events: none;
+        }
 
-html{
-scroll-behavior:smooth;
-}
+        .names-title {
+            font-size: 2.2rem;
+            color: #bfa15f;
+            margin-bottom: 5px;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 2px;
+        }
 
-body{
-font-family:'Poppins',sans-serif;
-background:var(--cream);
-color:var(--dark);
-line-height:1.7;
-overflow-x: hidden;
-}
+        .invitation-text {
+            font-size: 1rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 25px;
+        }
 
-/* Giriş Ekranı (Zarf Açılışı) */
-#welcome-screen {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100vh;
-background-color: var(--cream);
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-z-index: 9999;
-transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
-text-align: center;
-padding: 20px;
-}
+        /* Mühür Butonu */
+        .seal {
+            width: 75px;
+            height: 75px;
+            background: radial-gradient(#cc3333, #990000);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(153,0,0,0.4), inset 0 2px 5px rgba(255,255,255,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: 3px solid #b30000;
+            transition: transform 0.3s;
+            animation: pulse 2s infinite;
+        }
 
-#welcome-screen.hide {
-transform: translateY(-100vh);
-}
+        .seal::after {
+            content: 'KM';
+            font-family: 'Times New Roman', serif;
+            letter-spacing: 1px;
+        }
 
-/* Ana İçerik - Başlangıçta Gizli */
-.main-wrapper {
-opacity: 0;
-transition: opacity 1s ease 0.5s;
-}
+        .seal:hover {
+            transform: scale(1.05);
+        }
 
-.main-wrapper.show {
-opacity: 1;
-}
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(153,0,0,0.5); }
+            70% { box-shadow: 0 0 0 15px rgba(153,0,0,0); }
+            100% { box-shadow: 0 0 0 0 rgba(153,0,0,0); }
+        }
 
-.hero{
-min-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-text-align:center;
-padding:40px 20px;
-background:
-linear-gradient(rgba(250,247,242,.90),rgba(250,247,242,.90)),
-url("https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80");
-background-size:cover;
-background-position:center;
-}
+        /* Zarfın Yukarı Kayma Efekti */
+        .envelope-container.opened {
+            transform: translateY(-100vh);
+        }
 
-.hero-content{
-max-width:700px;
-}
+        /* Ana İçerik Alanı */
+        .main-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-.monogram{
-width:120px;
-height:120px;
-border:2px solid var(--gold);
-border-radius:50%;
-margin:0 auto 25px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-family:'Playfair Display',serif;
-font-size:42px;
-color:var(--gold);
-}
+        .main-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-h1, h2, h3{
-font-family:'Playfair Display',serif;
-color:var(--gold);
-}
+        /* Davetiye Kartı Görselleri ve Yapısı */
+        .invitation-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #eae1d4;
+        }
 
-h1{
-font-size:58px;
-margin-bottom:15px;
-}
+        .card-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
 
-.subtitle{
-font-size:20px;
-margin-bottom:25px;
-}
+        /* Sabit Müzik Butonu */
+        .music-toggle {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #bfa15f;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 999;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s;
+        }
 
-.date{
-font-size:22px;
-font-weight:600;
-color:var(--gold);
-}
+        .music-toggle:hover {
+            transform: scale(1.1);
+        }
 
-.section{
-padding:80px 20px;
-max-width:900px;
-margin:auto;
-text-align:center;
-}
-
-.section h2{
-font-size:38px;
-margin-bottom:25px;
-}
-
-.countdown{
-display:flex;
-justify-content:center;
-gap:15px;
-flex-wrap:wrap;
-margin-top:30px;
-}
-
-.card{
-background:white;
-padding:20px;
-min-width:110px;
-border-radius:20px;
-box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
-
-.card span{
-display:block;
-font-size:34px;
-font-weight:bold;
-color:var(--gold);
-}
-
-/* Mekan Bilgisi - Arka Plan Resimli Alan */
-.location-box{
-position: relative;
-background-image: url("https://images.unsplash.com/photo-1545232979-8bf34eb9757b?auto=format&fit=crop&w=800&q=80");
-background-size: cover;
-background-position: center;
-padding: 50px 30px;
-border-radius:20px;
-box-shadow:0 10px 30px rgba(0,0,0,.08);
-max-width:650px;
-margin:auto;
-overflow: hidden;
-z-index: 1;
-}
-
-.location-box::before {
-content: '';
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(255, 255, 255, 0.85); 
-z-index: -1;
-}
-
-.btn{
-display:inline-block;
-margin-top:20px;
-padding:14px 30px;
-background:var(--gold);
-color:white;
-text-decoration:none;
-border-radius:30px;
-font-weight:500;
-transition:.3s;
-cursor: pointer;
-border: none;
-}
-
-.btn:hover{
-transform:translateY(-2px);
-box-shadow: 0 5px 15px rgba(176,141,87,0.4);
-}
-
-.timeline{
-max-width:500px;
-margin:auto;
-text-align:left;
-}
-
-.timeline div{
-background:white;
-padding:18px;
-margin-bottom:15px;
-border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,.05);
-}
-
-footer{
-padding:60px 20px;
-text-align:center;
-background:#f0ebe5;
-}
-
-footer h3{
-font-size:34px;
-margin-bottom:10px;
-}
-
-.flower{
-font-size:26px;
-margin-bottom:15px;
-}
-
-/* Sabit Müzik Butonu */
-.music-btn{
-position:fixed;
-right:20px;
-bottom:20px;
-border:none;
-background:var(--gold);
-color:white;
-width: 50px;
-height: 50px;
-border-radius:50%;
-font-size:20px;
-cursor:pointer;
-box-shadow:0 5px 15px rgba(0,0,0,.2);
-z-index: 999;
-display: flex;
-align-items: center;
-justify-content: center;
-}
-
-/* YouTube iframe'i gizlemek için */
-#youtube-audio {
-position: absolute;
-top: -9999px;
-left: -9999px;
-width: 1px;
-height: 1px;
-overflow: hidden;
-}
-
-@media(max-width:768px){
-h1{ font-size:42px; }
-.section h2{ font-size:30px; }
-.card{ min-width:90px; }
-}
-</style>
+        /* YouTube API için Görünmez Katman */
+        #youtube-audio-layer {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
 
-<div id="welcome-screen">
-    <div class="monogram">KM</div>
-    <h2 style="font-size: 36px; margin-bottom: 10px;">Kübra & Mert</h2>
-    <p class="subtitle" style="margin-bottom: 30px;">Düğün Davetiyemize Hoş Geldiniz</p>
-    <button class="btn" onclick="openInvitation()">Davetiyeyi Aç ✨</button>
-</div>
-
-<div class="main-wrapper" id="main-content">
-
-    <section class="hero">
-    <div class="hero-content">
-        <div class="monogram">KM</div>
-        <h1>Kübra & Mert</h1>
-        <p class="subtitle">Birlikte yazdığımız hikâyenin en güzel sayfasına davetlisiniz.</p>
-        <p>Bazı yollar tesadüfen kesişir, bazı kalpler ise birbirini bulmak için yaratılmıştır.<br>
-        Hayatlarımızı birleştireceğimiz bu özel günde mutluluğumuza ortak olmanızdan onur duyarız.</p>
-        <br>
-        <div class="date">09 Ağustos 2026 • Saat 19:00</div>
+    <!-- SİZİN ORİJİNAL ZARF VE MÜHÜR DÜZENİNİZ -->
+    <div class="envelope-container" id="envelopeContainer">
+        <div class="envelope" onclick="openInvitation()">
+            <div class="names-title">Kübra & Mert</div>
+            <div class="invitation-text">Düğün Davetiyemize Hoş Geldiniz</div>
+            <div class="seal"></div>
+        </div>
     </div>
-    </section>
 
-    <section class="section">
-    <h2>Düğünümüze Kalan Süre</h2>
-    <div class="countdown">
-        <div class="card"><span id="days">0</span>Gün</div>
-        <div class="card"><span id="hours">0</span>Saat</div>
-        <div class="card"><span id="minutes">0</span>Dakika</div>
-        <div class="card"><span id="seconds">0</span>Saniye</div>
+    <!-- ANA İÇERİK: ESKİ DÜZENDEKİ GİBİ SADECE KART GÖRSELLERİNİZ -->
+    <div class="main-content" id="mainContent">
+        <div class="invitation-card">
+            <!-- Birinci Sayfa Görseliniz -->
+            <img src="https://eemmertkarademir-pixel.github.io/Kubra-Mert./1.png" alt="Davetiye Sayfa 1" class="card-image">
+        </div>
+        
+        <div class="invitation-card">
+            <!-- İkinci Sayfa Görseliniz -->
+            <img src="https://eemmertkarademir-pixel.github.io/Kubra-Mert./2.png" alt="Davetiye Sayfa 2" class="card-image">
+        </div>
     </div>
-    </section>
 
-    <section class="section">
-    <h2>Mekan Bilgisi</h2>
-    <div class="location-box">
-        <h3>Taşçı Konağı</h3>
-        <p>Eski Kemah Yolu Üzeri<br>Orman Fidanlığı Yanı<br>Merkez / Erzincan</p>
-        <a class="btn" href="https://maps.google.com" target="_blank">Konuma Git</a>
+    <!-- Müzik Kontrol Butonu -->
+    <button class="music-toggle" id="musicBtn" onclick="toggleMusic()">🎻</button>
+
+    <!-- Arka Planda Gizli Çalışan Oynatıcı -->
+    <div id="youtube-audio-layer">
+        <div id="player-instance"></div>
     </div>
-    </section>
 
-    <section class="section">
-    <h2>Program Akışı</h2>
-    <div class="timeline">
-        <div>Anlaşma Zamanı: 🕖 19:00 — Karşılama</div>
-        <div>💍 Düğün Töreni</div>
-        <div>📸 Fotoğraf Çekimi</div>
-        <div>🎶 Eğlence ve Kutlama</div>
-    </div>
-    </section>
+    <script>
+        let player;
+        let isPlaying = false;
+        let isApiReady = false;
 
-    <section class="section">
-    <h2>LCV</h2>
-    <p>Katılım durumunuzu bizimle paylaşabilir misiniz?</p><br>
-    <p>📱 0505 390 04 64</p>
-    <a class="btn" href="https://wa.me/905053900464" target="_blank">Katılım Bildir</a>
-    </section>
+        // YouTube Iframe API Yüklenmesi
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    <footer>
-        <div class="flower">🌿 🤍 🌾</div>
-        <h3>Kübra & Mert</h3>
-        <p>Bu anlamlı günümüzde yanımızda olmanız bizim için en değerli hediyedir.</p><br>
-        <p>09.08.2026</p>
-    </footer>
-
-</div>
-
-<button class="music-btn" id="music-control" onclick="toggleYoutubeMusic()">  </button>
-
-<div id="youtube-audio">
-    <div id="video-player"></div>
-</div>
-
-<script>
-// Geri Sayım Sayacı Scripti
-const weddingDate = new Date("2026-08-09T19:00:00").getTime();
-setInterval(() => {
-    const now = new Date().getTime();
-    const distance = weddingDate - now;
-    document.getElementById("days").innerHTML = Math.floor(distance / (1000*60*60*24));
-    document.getElementById("hours").innerHTML = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
-    document.getElementById("minutes").innerHTML = Math.floor((distance % (1000*60*60)) / (1000*60));
-    document.getElementById("seconds").innerHTML = Math.floor((distance % (1000*60)) / 1000);
-}, 1000);
-
-// YouTube Oynatıcı Kontrolleri (Senkronizasyon Hatası Çözüldü)
-let player;
-let isPlaying = false;
-let apiReady = false;
-
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('video-player', {
-        height: '100',
-        width: '100',
-        videoId: 'MPhNFTdhG3E', // Despacito Violin Cover ID'si
-        playerVars: {
-            'playsinline': 1,
-            'controls': 0,
-            'rel': 0,
-            'showinfo': 0,
-            'ecver': 2
-        },
-        events: {
-            'onReady': onPlayerReady
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player-instance', {
+                height: '10',
+                width: '10',
+                videoId: 'MPhNFTdhG3E', // Seçtiğiniz Keman Fon Müziği
+                playerVars: {
+                    'playsinline': 1,
+                    'controls': 0,
+                    'rel': 0,
+                    'showinfo': 0
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
         }
-    });
-}
 
-function onPlayerReady(event) {
-    apiReady = true;
-    document.getElementById('music-control').innerHTML = "🎻";
-}
+        function onPlayerReady(event) {
+            isApiReady = true;
+        }
 
-// YouTube API Asenkron Yükleme
-var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        // Zarfı Açma ve Müziği Başlatma Fonksiyonu (Eski düzeni korur)
+        function openInvitation() {
+            // Zarfı yukarı kaydırarak gizle
+            document.getElementById('envelopeContainer').classList.add('opened');
+            
+            // Ana davetiye kartlarını görünür yap
+            document.getElementById('mainContent').classList.add('visible');
 
-// Davetiyeyi Açma Fonksiyonu
-function openInvitation() {
-    document.getElementById('welcome-screen').classList.add('hide');
-    document.getElementById('main-content').classList.add('show');
-    
-    // API hazırsa müziği doğrudan başlat
-    if (apiReady && player && typeof player.playVideo === "function") {
-        player.playVideo();
-        isPlaying = true;
-        document.getElementById('music-control').innerHTML = "🔇";
-    } else {
-        // API'nin yüklenmesi çok az gecikirse yarım saniye sonra tekrar dene
-        setTimeout(() => {
-            if (player && typeof player.playVideo === "function") {
+            // Arka planda müziği güvenli bir şekilde tetikle
+            if (isApiReady && player && typeof player.playVideo === "function") {
                 player.playVideo();
                 isPlaying = true;
-                document.getElementById('music-control').innerHTML = "🔇";
+                document.getElementById('musicBtn').innerHTML = "🔇";
+            } else {
+                // API saliselerle geciktiyse tekrar dene
+                setTimeout(() => {
+                    if (player && typeof player.playVideo === "function") {
+                        player.playVideo();
+                        isPlaying = true;
+                        document.getElementById('musicBtn').innerHTML = "🔇";
+                    }
+                }, 400);
             }
-        }, 500);
-    }
-}
-
-// Müziği Kapatıp Açma Fonksiyonu
-function toggleYoutubeMusic() {
-    if (player && typeof player.playVideo === "function") {
-        if (isPlaying) {
-            player.pauseVideo();
-            document.getElementById('music-control').innerHTML = "🎻";
-            isPlaying = false;
-        } else {
-            player.playVideo();
-            document.getElementById('music-control').innerHTML = "🔇";
-            isPlaying = true;
         }
-    }
-}
-</script>
 
+        // Müzik Duraklatma / Başlatma
+        function toggleMusic() {
+            if (player && typeof player.playVideo === "function") {
+                if (isPlaying) {
+                    player.pauseVideo();
+                    document.getElementById('musicBtn').innerHTML = "🎻";
+                    isPlaying = false;
+                } else {
+                    player.playVideo();
+                    document.getElementById('musicBtn').innerHTML = "🔇";
+                    isPlaying = true;
+                }
+            }
+        }
+    </script>
 </body>
 </html>
