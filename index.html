@@ -1,4 +1,3 @@
-HTML
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -157,7 +156,7 @@ color:var(--gold);
 /* Mekan Bilgisi - Arka Plan Resimli Alan */
 .location-box{
 position: relative;
-background-image: url("https://images.unsplash.com/photo-1545232979-8bf34eb9757b?auto=format&fit=crop&w=800&q=80"); /* Taşçı Konağı konseptine uygun şık dış mekan resmi */
+background-image: url("https://images.unsplash.com/photo-1545232979-8bf34eb9757b?auto=format&fit=crop&w=800&q=80");
 background-size: cover;
 background-position: center;
 padding: 50px 30px;
@@ -169,7 +168,6 @@ overflow: hidden;
 z-index: 1;
 }
 
-/* Resmin üzerine yazıların okunması için çekilen beyaz transparan katman */
 .location-box::before {
 content: '';
 position: absolute;
@@ -252,7 +250,12 @@ justify-content: center;
 
 /* YouTube iframe'i gizlemek için */
 #youtube-audio {
-display: none;
+position: absolute;
+top: -9999px;
+left: -9999px;
+width: 1px;
+height: 1px;
+overflow: hidden;
 }
 
 @media(max-width:768px){
@@ -330,17 +333,14 @@ h1{ font-size:42px; }
 
 </div>
 
-<button class="music-btn" id="music-control" onclick="toggleYoutubeMusic()">🎻</button>
+<button class="music-btn" id="music-control" onclick="toggleYoutubeMusic()">  </button>
 
 <div id="youtube-audio">
-    <iframe id="video-player" width="100" height="100" 
-            src="https://www.youtube.com/embed/MPhNFTdhG3E?enablejsapi=1&controls=0&rel=0" 
-            frameborder="0" allow="autoplay">
-    </iframe>
+    <div id="video-player"></div>
 </div>
 
 <script>
-// Geri Sayım Sayacı Sripti
+// Geri Sayım Sayacı Scripti
 const weddingDate = new Date("2026-08-09T19:00:00").getTime();
 setInterval(() => {
     const now = new Date().getTime();
@@ -351,30 +351,59 @@ setInterval(() => {
     document.getElementById("seconds").innerHTML = Math.floor((distance % (1000*60)) / 1000);
 }, 1000);
 
-// YouTube Oynatıcı Kontrolleri
+// YouTube Oynatıcı Kontrolleri (Senkronizasyon Hatası Çözüldü)
 let player;
+let isPlaying = false;
+let apiReady = false;
+
 function onYouTubeIframeAPIReady() {
-    player = new YT.Player('video-player');
+    player = new YT.Player('video-player', {
+        height: '100',
+        width: '100',
+        videoId: 'MPhNFTdhG3E', // Despacito Violin Cover ID'si
+        playerVars: {
+            'playsinline': 1,
+            'controls': 0,
+            'rel': 0,
+            'showinfo': 0,
+            'ecver': 2
+        },
+        events: {
+            'onReady': onPlayerReady
+        }
+    });
 }
 
-// YouTube API yükleniyor
+function onPlayerReady(event) {
+    apiReady = true;
+    document.getElementById('music-control').innerHTML = "🎻";
+}
+
+// YouTube API Asenkron Yükleme
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-let isPlaying = false;
 
 // Davetiyeyi Açma Fonksiyonu
 function openInvitation() {
     document.getElementById('welcome-screen').classList.add('hide');
     document.getElementById('main-content').classList.add('show');
     
-    // Tarayıcı engeline takılmamak için kullanıcı tıkladığı an müzik başlıyor
-    if (player && typeof player.playVideo === "function") {
+    // API hazırsa müziği doğrudan başlat
+    if (apiReady && player && typeof player.playVideo === "function") {
         player.playVideo();
         isPlaying = true;
         document.getElementById('music-control').innerHTML = "🔇";
+    } else {
+        // API'nin yüklenmesi çok az gecikirse yarım saniye sonra tekrar dene
+        setTimeout(() => {
+            if (player && typeof player.playVideo === "function") {
+                player.playVideo();
+                isPlaying = true;
+                document.getElementById('music-control').innerHTML = "🔇";
+            }
+        }, 500);
     }
 }
 
