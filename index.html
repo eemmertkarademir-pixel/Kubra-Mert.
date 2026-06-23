@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -21,154 +22,48 @@ padding:0;
 box-sizing:border-box;
 }
 
-html, body {
-background: var(--cream);
-font-family: 'Poppins', sans-serif;
-color: var(--dark);
-line-height: 1.7;
+html{
+scroll-behavior:smooth;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:var(--cream);
+color:var(--dark);
+line-height:1.7;
 overflow-x: hidden;
 }
 
-body.locked {
-overflow: hidden;
-height: 100vh;
-}
-
-/* --- KUSURSUZ GEÇİŞ İÇİN SAHNE YAPISI --- */
-.page-wrapper {
-position: relative;
+/* Giriş Ekranı (Zarf Açılışı) */
+#welcome-screen {
+position: fixed;
+top: 0;
+left: 0;
 width: 100%;
-transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
+height: 100vh;
+background-color: var(--cream);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 9999;
+transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+text-align: center;
+padding: 20px;
 }
 
-body.expanded .page-wrapper {
+#welcome-screen.hide {
 transform: translateY(-100vh);
 }
 
-/* ZARF EKRANI */
-.envelope-stage {
-width: 100%;
-height: 100vh;
-display: flex;
-justify-content: center;
-align-items: center;
-background-color: var(--cream);
-perspective: 1200px;
-position: relative;
-z-index: 10;
-}
-
-.envelope {
-position: relative;
-width: 450px;
-height: 300px;
-background-color: #dfdcd4;
-cursor: pointer;
-box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-transform-style: preserve-3d;
-transition: transform 0.4s ease;
-}
-
-.envelope:hover {
-transform: scale(1.02);
-}
-
-.envelope .flap, .envelope .pocket {
-position: absolute;
-width: 0;
-height: 0;
-border-style: solid;
-}
-
-.envelope .flap {
-border-width: 150px 225px 0 225px;
-border-color: #c9c5bc transparent transparent transparent;
-top: 0;
-left: 0;
-transform-origin: top;
-z-index: 3;
-transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0s, z-index 0.1s ease 0.4s;
-}
-
-.envelope .pocket {
-border-width: 150px 225px 150px 225px;
-border-color: transparent #d3cfc5 #b7b3aa #d3cfc5;
-bottom: 0;
-left: 0;
-z-index: 2;
-}
-
-.envelope .seal {
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-width: 60px;
-height: 60px;
-background: var(--gold);
-border-radius: 50%;
-color: white;
-display: flex;
-align-items: center;
-justify-content: center;
-font-family: 'Playfair Display', serif;
-font-weight: bold;
-font-size: 20px;
-z-index: 4;
-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.letter-card {
-position: absolute;
-top: 5%;
-left: 5%;
-width: 90%;
-height: 90%;
-background: var(--white);
-border-radius: 8px;
-box-shadow: 0 0 15px rgba(0,0,0,0.05);
-z-index: 1;
-transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-padding: 20px;
-text-align: center;
-}
-
-.letter-card h2 {
-font-family: 'Playfair Display', serif;
-color: var(--gold);
-font-size: 28px;
-margin-bottom: 5px;
-}
-.letter-card p {
-font-size: 14px;
-color: #777;
-}
-
-.envelope.open .seal {
+/* Ana İçerik - Başlangıçta Gizli */
+.main-wrapper {
 opacity: 0;
-transform: translate(-50%, -50%) scale(0);
+transition: opacity 1s ease 0.5s;
 }
 
-.envelope.open .flap {
-transform: rotateX(180deg);
-z-index: 0;
-}
-
-.envelope.open .letter-card {
-transform: translateY(-200px);
-z-index: 5;
-}
-
-/* --- ASIL SİTE / DAVETİYE İÇERİĞİ --- */
-.main-content {
-width: 100%;
-min-height: 100vh;
-background: var(--cream);
+.main-wrapper.show {
+opacity: 1;
 }
 
 .hero{
@@ -179,16 +74,14 @@ justify-content:center;
 text-align:center;
 padding:40px 20px;
 background:
-linear-gradient(rgba(250,247,242,.85),rgba(250,247,242,.85)),
-url("./arka-plan.jpg");
-background-size: contain; /* Fotoğrafı kesmeden ekrana sığdırır */
-background-position: center center; /* Tam ortalar */
-background-repeat: no-repeat;
+linear-gradient(rgba(250,247,242,.90),rgba(250,247,242,.90)),
+url("https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80");
+background-size:cover;
+background-position:center;
 }
 
 .hero-content{
 max-width:700px;
-animation:fadeIn 2s ease;
 }
 
 .monogram{
@@ -203,33 +96,27 @@ justify-content:center;
 font-family:'Playfair Display',serif;
 font-size:42px;
 color:var(--gold);
-background: rgba(255,255,255,0.5);
+}
+
+h1, h2, h3{
+font-family:'Playfair Display',serif;
+color:var(--gold);
 }
 
 h1{
-font-family:'Playfair Display',serif;
 font-size:58px;
-color:var(--gold);
 margin-bottom:15px;
-text-shadow: 0 1px 2px rgba(255,255,255,0.8);
 }
 
 .subtitle{
 font-size:20px;
 margin-bottom:25px;
-font-weight: 500;
-}
-
-.hero-content p {
-font-size: 16px;
-margin-bottom: 20px;
 }
 
 .date{
 font-size:22px;
 font-weight:600;
 color:var(--gold);
-margin-top: 25px;
 }
 
 .section{
@@ -240,10 +127,8 @@ text-align:center;
 }
 
 .section h2{
-font-family:'Playfair Display',serif;
 font-size:38px;
 margin-bottom:25px;
-color:var(--gold);
 }
 
 .countdown{
@@ -269,13 +154,31 @@ font-weight:bold;
 color:var(--gold);
 }
 
+/* Mekan Bilgisi - Arka Plan Resimli Alan */
 .location-box{
-background:white;
-padding:30px;
+position: relative;
+background-image: url("https://images.unsplash.com/photo-1545232979-8bf34eb9757b?auto=format&fit=crop&w=800&q=80"); /* Taşçı Konağı konseptine uygun şık dış mekan resmi */
+background-size: cover;
+background-position: center;
+padding: 50px 30px;
 border-radius:20px;
 box-shadow:0 10px 30px rgba(0,0,0,.08);
 max-width:650px;
 margin:auto;
+overflow: hidden;
+z-index: 1;
+}
+
+/* Resmin üzerine yazıların okunması için çekilen beyaz transparan katman */
+.location-box::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(255, 255, 255, 0.85); 
+z-index: -1;
 }
 
 .btn{
@@ -288,10 +191,13 @@ text-decoration:none;
 border-radius:30px;
 font-weight:500;
 transition:.3s;
+cursor: pointer;
+border: none;
 }
 
 .btn:hover{
 transform:translateY(-2px);
+box-shadow: 0 5px 15px rgba(176,141,87,0.4);
 }
 
 .timeline{
@@ -315,9 +221,7 @@ background:#f0ebe5;
 }
 
 footer h3{
-font-family:'Playfair Display',serif;
 font-size:34px;
-color:var(--gold);
 margin-bottom:10px;
 }
 
@@ -326,6 +230,7 @@ font-size:26px;
 margin-bottom:15px;
 }
 
+/* Sabit Müzik Butonu */
 .music-btn{
 position:fixed;
 right:20px;
@@ -333,153 +238,159 @@ bottom:20px;
 border:none;
 background:var(--gold);
 color:white;
-padding:15px;
+width: 50px;
+height: 50px;
 border-radius:50%;
 font-size:20px;
 cursor:pointer;
 box-shadow:0 5px 15px rgba(0,0,0,.2);
 z-index: 999;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
-@keyframes fadeIn{
-from{opacity:0; transform:translateY(30px);}
-to{opacity:1; transform:translateY(0);}
+/* YouTube iframe'i gizlemek için */
+#youtube-audio {
+display: none;
 }
 
 @media(max-width:768px){
 h1{ font-size:42px; }
 .section h2{ font-size:30px; }
 .card{ min-width:90px; }
-.envelope { width: 330px; height: 220px; }
-.envelope .flap { border-width: 110px 165px 0 165px; }
-.envelope .pocket { border-width: 110px 165px 110px 165px; }
-.envelope.open .letter-card { transform: translateY(-140px); }
 }
 </style>
 </head>
-<body class="locked">
+<body>
 
-<div class="page-wrapper">
+<div id="welcome-screen">
+    <div class="monogram">KM</div>
+    <h2 style="font-size: 36px; margin-bottom: 10px;">Kübra & Mert</h2>
+    <p class="subtitle" style="margin-bottom: 30px;">Düğün Davetiyemize Hoş Geldiniz</p>
+    <button class="btn" onclick="openInvitation()">Davetiyeyi Aç ✨</button>
+</div>
 
-  <div class="envelope-stage">
-    <div class="envelope" id="myEnvelope" onclick="openEnvelope()">
-      <div class="flap"></div>
-      <div class="pocket"></div>
-      <div class="seal">KM</div>
-      
-      <div class="letter-card">
-        <h2>Kübra & Mert</h2>
-        <p>Düğün Davetiyesi</p>
-        <span style="font-size: 20px; margin-top:10px;">✨</span>
-      </div>
-    </div>
-  </div>
+<div class="main-wrapper" id="main-content">
 
-  <div class="main-content">
     <section class="hero">
-      <div class="hero-content">
+    <div class="hero-content">
         <div class="monogram">KM</div>
         <h1>Kübra & Mert</h1>
-        
-        <p class="subtitle">
-          "Bir ‘evet’ ile başlayan hikâyemizin en özel gününde, mutluluğumuzu paylaşmak üzere sizleri düğünümüze bekliyoruz."
-        </p>
-        
+        <p class="subtitle">Birlikte yazdığımız hikâyenin en güzel sayfasına davetlisiniz.</p>
+        <p>Bazı yollar tesadüfen kesişir, bazı kalpler ise birbirini bulmak için yaratılmıştır.<br>
+        Hayatlarımızı birleştireceğimiz bu özel günde mutluluğumuza ortak olmanızdan onur duyarız.</p>
+        <br>
         <div class="date">09 Ağustos 2026 • Saat 19:00</div>
-      </div>
+    </div>
     </section>
 
     <section class="section">
-      <h2>Düğünümüze Kalan Süre</h2>
-      <div class="countdown">
+    <h2>Düğünümüze Kalan Süre</h2>
+    <div class="countdown">
         <div class="card"><span id="days">0</span>Gün</div>
         <div class="card"><span id="hours">0</span>Saat</div>
         <div class="card"><span id="minutes">0</span>Dakika</div>
         <div class="card"><span id="seconds">0</span>Saniye</div>
-      </div>
+    </div>
     </section>
 
     <section class="section">
-      <h2>Mekan Bilgisi</h2>
-      <div class="location-box">
+    <h2>Mekan Bilgisi</h2>
+    <div class="location-box">
         <h3>Taşçı Konağı</h3>
         <p>Eski Kemah Yolu Üzeri<br>Orman Fidanlığı Yanı<br>Merkez / Erzincan</p>
         <a class="btn" href="https://maps.google.com" target="_blank">Konuma Git</a>
-      </div>
+    </div>
     </section>
 
     <section class="section">
-      <h2>Program Akışı</h2>
-      <div class="timeline">
-        <div>🕖 19:00 — Karşılama</div>
+    <h2>Program Akışı</h2>
+    <div class="timeline">
+        <div>Anlaşma Zamanı: 🕖 19:00 — Karşılama</div>
         <div>💍 Düğün Töreni</div>
         <div>📸 Fotoğraf Çekimi</div>
         <div>🎶 Eğlence ve Kutlama</div>
-      </div>
+    </div>
     </section>
 
     <section class="section">
-      <h2>LCV</h2>
-      <p>Katılım durumunuzu bizimle paylaşabilir misiniz?</p>
-      <br>
-      <p>📱 0505 390 04 64</p>
-      <a class="btn" href="https://wa.me/905053900464?text=Merhaba%20Kübra%20ve%20Mert,%20düğün%20davetiniz%20için%20teşekkür%20ederiz.%20Katılım%20durumumuzu%20bildirmek%20istiyoruz." target="_blank">Katılım Bildir</a>
+    <h2>LCV</h2>
+    <p>Katılım durumunuzu bizimle paylaşabilir misiniz?</p><br>
+    <p>📱 0505 390 04 64</p>
+    <a class="btn" href="https://wa.me/905053900464" target="_blank">Katılım Bildir</a>
     </section>
 
     <footer>
-      <div class="flower">🌿 🤍 🌾</div>
-      <h3>Kübra & Mert</h3>
-      <p>Bu anlamlı günümüzde yanımızda olmanız bizim için en değerli hediyedir.</p>
-      <br>
-      <p>09.08.2026</p>
+        <div class="flower">🌿 🤍 🌾</div>
+        <h3>Kübra & Mert</h3>
+        <p>Bu anlamlı günümüzde yanımızda olmanız bizim için en değerli hediyedir.</p><br>
+        <p>09.08.2026</p>
     </footer>
-  </div>
 
 </div>
 
-<button class="music-btn" onclick="toggleMusic()">🎻</button>
+<button class="music-btn" id="music-control" onclick="toggleYoutubeMusic()">🎻</button>
 
-<audio id="music" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
+<div id="youtube-audio">
+    <iframe id="video-player" width="100" height="100" 
+            src="https://www.youtube.com/embed/MPhNFTdhG3E?enablejsapi=1&controls=0&rel=0" 
+            frameborder="0" allow="autoplay">
+    </iframe>
+</div>
 
 <script>
-function openEnvelope() {
-  const envelope = document.getElementById('myEnvelope');
-  
-  if(!envelope.classList.contains('open')) {
-    envelope.classList.add('open');
-    
-    const music = document.getElementById("music");
-    if(music) {
-      music.play().catch(e => console.log("Müzik çalma durumu kontrolü."));
-    }
-    
-    setTimeout(() => {
-      document.body.classList.add('expanded');
-      document.body.classList.remove('locked');
-    }, 1400);
-  }
-}
-
+// Geri Sayım Sayacı Sripti
 const weddingDate = new Date("2026-08-09T19:00:00").getTime();
 setInterval(() => {
-  const now = new Date().getTime();
-  const distance = weddingDate - now;
-
-  document.getElementById("days").innerHTML = Math.floor(distance / (1000*60*60*24));
-  document.getElementById("hours").innerHTML = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
-  document.getElementById("minutes").innerHTML = Math.floor((distance % (1000*60*60)) / (1000*60));
-  document.getElementById("seconds").innerHTML = Math.floor((distance % (1000*60)) / 1000);
+    const now = new Date().getTime();
+    const distance = weddingDate - now;
+    document.getElementById("days").innerHTML = Math.floor(distance / (1000*60*60*24));
+    document.getElementById("hours").innerHTML = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+    document.getElementById("minutes").innerHTML = Math.floor((distance % (1000*60*60)) / (1000*60));
+    document.getElementById("seconds").innerHTML = Math.floor((distance % (1000*60)) / 1000);
 }, 1000);
 
-function toggleMusic(){
-  const music = document.getElementById("music");
-  if(music && !music.paused){
-    music.pause();
-  } else if(music) {
-    music.play().catch(e => console.log(e));
-  }
+// YouTube Oynatıcı Kontrolleri
+let player;
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('video-player');
+}
+
+// YouTube API yükleniyor
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+let isPlaying = false;
+
+// Davetiyeyi Açma Fonksiyonu
+function openInvitation() {
+    document.getElementById('welcome-screen').classList.add('hide');
+    document.getElementById('main-content').classList.add('show');
+    
+    // Tarayıcı engeline takılmamak için kullanıcı tıkladığı an müzik başlıyor
+    if (player && typeof player.playVideo === "function") {
+        player.playVideo();
+        isPlaying = true;
+        document.getElementById('music-control').innerHTML = "🔇";
+    }
+}
+
+// Müziği Kapatıp Açma Fonksiyonu
+function toggleYoutubeMusic() {
+    if (player && typeof player.playVideo === "function") {
+        if (isPlaying) {
+            player.pauseVideo();
+            document.getElementById('music-control').innerHTML = "🎻";
+            isPlaying = false;
+        } else {
+            player.playVideo();
+            document.getElementById('music-control').innerHTML = "🔇";
+            isPlaying = true;
+        }
+    }
 }
 </script>
 
