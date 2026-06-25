@@ -3,332 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kübra & Mert Davetiye</title>
+    <title>Kübra & Mert Düğün Davetiyesi</title>
     <style>
-        /* Genel Stil Ayarları */
+        :root {
+            --bg-color: #f4ece1;
+            --envelope-color: #cfbda8;
+            --envelope-inside: #bfae99;
+            --card-color: #ffffff;
+            --text-color: #4a4a4a;
+            --accent-color: #8c7662;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
         body {
-            font-family: 'Playfair Display', 'Georgia', serif;
-            background-color: #f4f3ef;
-            color: #333;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        /* Mobil Cihaz Çerçevesi Öykünmesi (Videodaki gibi şık durması için) */
-        .phone-container {
-            width: 100%;
-            max-width: 450px;
-            background-color: #ffffff;
-            min-height: 100vh;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            position: relative;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow: hidden;
+            perspective: 1000px;
         }
 
-        /* 1. EKRAN: Animasyonlu Zarf Alanı */
-        .envelope-wrapper {
+        /* Arka plan süslemeleri */
+        .background-decor {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background-color: #f4f3ef;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            transition: transform 1s ease-in-out, opacity 1s ease-in-out;
-            padding: 20px;
-        }
-        .envelope-wrapper.opened {
-            transform: translateY(-100%);
-            opacity: 0;
-            pointer-events: none;
-        }
-        .envelope-title {
-            font-size: 24px;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-            text-align: center;
+            overflow: hidden;
+            z-index: 1;
         }
         
-        /* Grafiksel Zarf Yapısı */
-        .envelope {
-            position: relative;
-            width: 280px;
-            height: 180px;
-            background-color: #606c38; /* Zeytin Yeşili */
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            cursor: pointer;
-            margin-bottom: 40px;
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(207, 189, 168, 0.2);
+            filter: blur(20px);
         }
-        /* Zarf Kapağı */
+        .circle-1 { width: 300px; height: 300px; top: -100px; left: -100px; }
+        .circle-2 { width: 400px; height: 400px; bottom: -150px; right: -150px; }
+
+        /* Kapsayıcı */
+        .wrapper {
+            position: relative;
+            width: 380px;
+            height: 500px;
+            z-index: 2;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        /* ZARF */
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 350px;
+            background-color: var(--envelope-color);
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            z-index: 3;
+            transition: transform 0.5s ease;
+        }
+
+        /* Zarfın İç Kısmı */
         .envelope::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--envelope-inside);
+            border-radius: 0 0 10px 10px;
+            clip-path: polygon(0 0, 0% 100%, 100% 100%, 100% 0, 50% 45%);
+            z-index: 2;
+        }
+
+        /* Zarf Ön Cepleri (Görsel Derinlik İçin) */
+        .envelope-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+        }
+
+        .envelope-front::slide {
+            content: '';
+            position: absolute;
             width: 0;
             height: 0;
-            border-left: 140px solid transparent;
-            border-right: 140px solid transparent;
-            border-top: 100px solid #4f582f; /* Daha koyu yeşil kapak */
-            transform-origin: top;
-            transition: transform 0.6s ease;
-            z-index: 3;
         }
-        .envelope.open-cap::before {
-            transform: rotateX(180deg) translateY(2px);
-            z-index: 1;
-        }
-        /* Zarfın İçindeki Kartlaşma */
-        .mumu-seal {
+
+        /* Sol ve Sağ Üçgenler */
+        .envelope-front::before {
+            content: '';
             position: absolute;
-            top: 40%;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #c5b39e;
+            clip-path: polygon(0 0, 50% 50%, 0 100%);
+            border-radius: 0 0 0 10px;
+        }
+
+        .envelope-front::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: #bcab96;
+            clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+            border-radius: 0 0 10px 0;
+        }
+
+        /* Alt Üçgen */
+        .envelope-bottom {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: #b3a18c;
+            clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+            z-index: 5;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* ZARF KAPAĞI */
+        .flap {
+            position: absolute;
+            top: 150px; /* Zarfın üst çizgisine hizalı */
+            width: 380px;
+            height: 170px;
+            background-color: var(--envelope-color);
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            transform-origin: top;
+            transition: transform 0.6s ease, z-index 0.2s ease 0.2s;
+            z-index: 6;
+            box-shadow: 0 -5px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Zarf Üzerindeki İsim Kilidi (Mühür efekti) */
+        .seal {
+            position: absolute;
+            top: 290px;
             left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background-color: #b79455; /* Gold Mum Mühür */
+            transform: translateX(-50%);
+            width: 55px;
+            height: 55px;
+            background-color: var(--accent-color);
             border-radius: 50%;
-            z-index: 4;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
             font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            transition: opacity 0.3s ease;
-        }
-        .envelope.open-cap .mumu-seal {
-            opacity: 0;
-        }
-        .click-text {
-            font-size: 14px;
-            letter-spacing: 3px;
-            color: #606c38;
-            font-weight: bold;
-            cursor: pointer;
-            animation: pulse 1.5s infinite;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 7;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            font-family: 'Georgia', serif;
         }
 
-        /* 2. EKRAN: Davetiye İçeriği (Zarf açılınca görünür) */
-        .main-content {
-            padding: 30px 20px;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 1s ease;
-            transition-delay: 0.5s;
-        }
-        .phone-container.active .main-content {
-            opacity: 1;
-        }
-        
-        .names-header {
-            font-size: 32px;
-            color: #606c38;
-            margin-bottom: 10px;
-        }
-        .sub-title {
-            font-style: italic;
-            font-size: 16px;
-            color: #777;
-            margin-bottom: 30px;
-        }
-
-        /* Orijinal Sitedeki Davetiye Görselleri */
-        .invitation-img {
-            width: 100%;
-            height: auto;
+        /* DAVETİYE KARTI */
+        .card {
+            position: absolute;
+            width: 350px;
+            height: 460px;
+            background-color: var(--card-color);
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-        }
-
-        /* Geri Sayım Sayacı (Countdown) */
-        .countdown-section {
-            background-color: #606c38;
-            color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 30px 0;
-        }
-        .countdown-title {
-            font-size: 14px;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-        .timer {
-            display: flex;
-            justify-content: space-around;
-        }
-        .time-box {
-            font-size: 18px;
-        }
-        .time-box span {
-            display: block;
-            font-size: 11px;
-            color: #dfd;
-            text-transform: uppercase;
-            margin-top: 5px;
-        }
-
-        /* Müzik Plak Alanı (Videodaki Concept) */
-        .music-box {
-            margin: 30px 0;
+            padding: 30px 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            z-index: 2;
+            transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateY(0); /* Zarfın içinde gizli */
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-        .disc {
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle, #333 30%, #111 31%, #333 40%, #000 41%);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            font-size: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            cursor: pointer;
-        }
-        .disc.playing {
-            animation: rotateDisc 3s linear infinite;
+            text-align: center;
+            border: 1px solid #f0e6da;
         }
 
-        /* Animasyon Tanımlamaları */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        /* Kartın İç Tasarımı */
+        .card-border {
+            border: 1px solid var(--accent-color);
+            width: 100%;
+            height: 100%;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
         }
-        @keyframes rotateDisc {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+
+        .names {
+            font-family: 'Georgia', serif;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            font-weight: italic;
+            margin-top: 10px;
+        }
+
+        .names span {
+            display: block;
+            font-size: 1.2rem;
+            margin: 5px 0;
+            color: var(--text-color);
+        }
+
+        .invitation-text {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            line-height: 1.5;
+            font-style: italic;
+            margin: 15px 0;
+        }
+
+        .event-section {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .event-title {
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--envelope-color);
+            padding-bottom: 3px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .event-details {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        /* AKTİF (AÇILMIŞ) DURUMU */
+        .wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .wrapper.open .seal {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px) scale(0.8);
+            pointer-events: none;
+        }
+
+        .wrapper.open .card {
+            transform: translateY(-220px);
+            z-index: 5;
+        }
+        
+        /* Tıklama İpucu */
+        .hint {
+            position: absolute;
+            bottom: -40px;
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            letter-spacing: 1px;
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="phone-container" id="container">
+    <div class="background-decor">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+    </div>
+
+    <div class="wrapper" id="invitationWrapper">
         
-        <div class="envelope-wrapper" id="envelopeWrapper">
-            <div class="envelope-title">
-                <p>Kübra & Mert</p>
-                <p style="font-size: 14px; color: #777; margin-top: 5px;">Düğün Davetiyesi</p>
-            </div>
-            
-            <div class="envelope" id="envelope" onclick="openInvitation()">
-                <div class="mumu-seal">K & M</div>
-            </div>
-            
-            <div class="click-text" onclick="openInvitation()">AÇMAK İÇİN TIKLAYINIZ</div>
-        </div>
+        <div class="seal">K&M</div>
 
-        <div class="main-content">
-            <h1 class="names-header">Kübra & Mert</h1>
-            <p class="sub-title">Düğün Davetiyemize Hoş Geldiniz</p>
-            
-            <img src="https://eemmertkarademir-pixel.github.io/Kubra-Mert./1.png" alt="Davetiye Sayfa 1" class="invitation-img">
-            <img src="https://eemmertkarademir-pixel.github.io/Kubra-Mert./2.png" alt="Davetiye Sayfa 2" class="invitation-img">
-            
-            <div class="music-box">
-                <div class="disc" id="musicDisc" onclick="toggleMusic()">🎻</div>
-                <p style="font-size: 12px; margin-top: 8px; color: #606c38; font-weight: bold;">Müziği Başlat/Durdur</p>
-                <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
-            </div>
+        <div class="flap"></div>
 
-            <div class="countdown-section">
-                <p class="countdown-title">Düğünümüze Kalan Süre</p>
-                <div class="timer">
-                    <div class="time-box"><div id="days">00</div><span>Gün</span></div>
-                    <div class="time-box"><div id="hours">00</div><span>Saat</span></div>
-                    <div class="time-box"><div id="minutes">00</div><span>Dakika</span></div>
-                    <div class="time-box"><div id="seconds">00</div><span>Saniye</span></div>
+        <div class="card">
+            <div class="card-border">
+                <div class="names">
+                    Kübra
+                    <span>&</span>
+                    Mert
+                </div>
+                
+                <p class="invitation-text">
+                    Hayatımızın bu en özel gününde <br>sizleri de aramızda görmekten <br>mutluluk duyarız.
+                </p>
+                
+                <div class="event-section">
+                    <div class="event-title">Kına Gecesi</div>
+                    <div class="event-details">
+                        <strong>Tarih:</strong> 03.08.2026<br>
+                        <strong>Saat:</strong> 19:00<br>
+                        <strong>Yer:</strong> Samtar Davet<br>
+                        <small>İstanbul</small>
+                    </div>
+                </div>
+                
+                <div class="event-section">
+                    <div class="event-title">Düğün</div>
+                    <div class="event-details">
+                        <strong>Tarih:</strong> 09.08.2026<br>
+                        <strong>Saat:</strong> 19:00<br>
+                        <strong>Yer:</strong> Taşçı Konağı<br>
+                        <small>Erzincan</small>
+                    </div>
                 </div>
             </div>
-
-            <p style="font-size: 20px; color: #606c38; margin-top: 20px;">🎻</p>
         </div>
 
+        <div class="envelope">
+            <div class="envelope-front"></div>
+            <div class="envelope-bottom"></div>
+        </div>
+
+        <div class="hint">Açmak için zarfa dokunun</div>
     </div>
 
     <script>
-        // Zarfı Açma Fonksiyonu
-        function openInvitation() {
-            const envelope = document.getElementById('envelope');
-            const wrapper = document.getElementById('envelopeWrapper');
-            const container = document.getElementById('container');
+        const wrapper = document.getElementById('invitationWrapper');
+        
+        // Zarfa tıklandığında açılma/kapanma animasyonunu tetikler
+        wrapper.addEventListener('click', () => {
+            wrapper.classList.toggle('open');
             
-            // Önce zarf kapağını aç
-            envelope.classList.add('open-cap');
-            
-            // Kısa bir süre sonra zarfı yukarı kaydır ve içeriği göster
-            setTimeout(() => {
-                wrapper.classList.add('opened');
-                container.classList.add('active');
-                // Müziği otomatik başlatmayı dene (Tarayıcı izinlerine bağlıdır)
-                playMusic();
-            }, 800);
-        }
-
-        // Müzik Kontrol Fonksiyonları
-        const audio = document.getElementById('bgMusic');
-        const disc = document.getElementById('musicDisc');
-
-        function playMusic() {
-            audio.play().then(() => {
-                disc.classList.add('playing');
-            }).catch(err => console.log("Otomatik müzik çalma tarayıcı tarafından engellendi. Kullanıcı etkileşimi gerekiyor."));
-        }
-
-        function toggleMusic() {
-            if (audio.paused) {
-                audio.play();
-                disc.classList.add('playing');
+            const hint = document.querySelector('.hint');
+            if(wrapper.classList.contains('open')) {
+                hint.textContent = "Kapatmak için zarfa dokunun";
             } else {
-                audio.pause();
-                disc.classList.remove('playing');
+                hint.textContent = "Açmak için zarfa dokunun";
             }
-        }
-
-        // Kalan Zaman Sayacı Fonksiyonu (9 Ağustos 2026 - 19:00 için ayarlı)
-        const weddingDate = new Date("Aug 9, 2026 19:00:00").getTime();
-
-        const timerInterval = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = weddingDate - now;
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("days").innerHTML = days < 10 ? "0" + days : days;
-            document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
-            document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
-            document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
-
-            if (distance < 0) {
-                clearInterval(timerInterval);
-                document.querySelector(".countdown-section").innerHTML = "Düğün Günü Geldi!";
-            }
-        }, 1000);
+        });
     </script>
 </body>
 </html>
